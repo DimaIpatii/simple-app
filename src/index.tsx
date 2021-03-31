@@ -17,6 +17,11 @@ mergeStyles({
     height: '100vh',
     maxHidth: '100%',
   },
+  ':global(#root)': {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 ReactDOM.render(<App />, document.getElementById('root'));
 

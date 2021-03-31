@@ -4,6 +4,17 @@ import { initializeIcons } from '@uifabric/icons';
 import { IconButton, DefaultButton } from '@fluentui/react/lib/Button';
 /* Styles */
 import './App.css';
+import { mainCaptionStyle } from '../styles/typography';
+import {
+  toDoWrapperStyle,
+  addTaskWrapperStyle,
+  btnSelectAllStyle,
+  btnFilterActiveStyle,
+  btnFilterDefaultStyle,
+  textFieldAddStyle,
+  filterWrapperStyle,
+  taskMessageWrapperStyle,
+} from '../styles/components';
 
 /* Components */
 import ListItem from './components/ListItem';
@@ -100,73 +111,94 @@ export const App: React.FunctionComponent<any> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buffer]);
 
-  console.log(tasks);
+  /* ************************************* */
   return (
     /* Wrapper */
-    <Stack
-      styles={{
-        root: {
-          maxWidth: 720,
-          margin: 'auto',
-        },
-      }}
-    >
-      <Text
-        variant="mega"
-        styles={{ root: { color: 'red', textAlign: 'center' } }}
-      >
+    <Stack styles={toDoWrapperStyle()} tokens={{ childrenGap: 10 }}>
+      <Text variant="mega" styles={mainCaptionStyle()}>
         todos
       </Text>
-      {/* Header */}
-      <Stack
-        horizontal
-        verticalAlign="center"
-        styles={{ root: { borderBottom: '1px solid grey', width: '100%' } }}
-      >
-        {/* Button Check All */}
-        <IconButton
-          iconProps={{ iconName: 'ChevronDownSmall' }}
-          title="ChevronDownSmall"
-          ariaLabel="ChevronDownSmall"
-          styles={{ root: { color: 'grey' } }}
-          onClick={toggleAll}
-        />
+      <div className="wrapper">
+        {/* Header */}
+        <Stack
+          horizontal
+          verticalAlign="center"
+          tokens={{ childrenGap: 5, padding: 5 }}
+          styles={addTaskWrapperStyle()}
+        >
+          {/* Button Check All */}
+          <IconButton
+            iconProps={{ iconName: 'ChevronDownSmall' }}
+            title="ChevronDownSmall"
+            ariaLabel="ChevronDownSmall"
+            styles={btnSelectAllStyle()}
+            onClick={toggleAll}
+            disabled={buffer.length > 0 ? false : true}
+          />
 
-        {/* Input textfiled*/}
-        <TextField
-          placeholder="What needs to be done?"
-          value={taskInput}
-          onChange={(e: any) => setTaskInput(e.target.value)}
-          onKeyPress={(e: any) => addTask(e.key)}
-        />
-      </Stack>
-      {/* To-do items wrapper*/}
-      {buffer.length > 0 ? (
-        <div>
+          {/* Input textfiled*/}
+          <TextField
+            placeholder="What needs to be done?"
+            value={taskInput}
+            onChange={(e: any) => setTaskInput(e.target.value)}
+            onKeyPress={(e: any) => addTask(e.key)}
+            borderless
+            styles={textFieldAddStyle}
+          />
+        </Stack>
+
+        {/* To-do items wrapper*/}
+
+        <div
+          className={`tasksContainer ${
+            buffer.length > 0 ? 'tasksContainerShow' : ''
+          }`}
+        >
           {/* Content */}
-          {tasks &&
-            tasks.map((task) => {
-              return (
-                <ListItem
-                  key={task.id}
-                  id={task.id}
-                  task={task.task}
-                  completed={task.completed}
-                  upadateTask={upadateTask}
-                  toggleTask={toggleTask}
-                  deleteTask={deleteTask}
-                />
-              );
-            })}
-          {tasks.length === 0 && filterState === 'Active' && (
-            <h1>Here is no active tasks to do.</h1>
-          )}
-          {tasks.length === 0 && filterState === 'Completed' && (
-            <h1>Here is no completed tasks yet.</h1>
-          )}
-
+          <div className="tasksWrapper">
+            {tasks &&
+              tasks.map((task) => {
+                return (
+                  <ListItem
+                    key={task.id}
+                    id={task.id}
+                    task={task.task}
+                    completed={task.completed}
+                    upadateTask={upadateTask}
+                    toggleTask={toggleTask}
+                    deleteTask={deleteTask}
+                  />
+                );
+              })}
+            {tasks.length === 0 && filterState === 'Active' && (
+              <Stack
+                horizontal
+                horizontalAlign="center"
+                verticalAlign="center"
+                styles={taskMessageWrapperStyle}
+              >
+                <Text variant="large">Here is no active tasks to do.</Text>
+              </Stack>
+            )}
+            {tasks.length === 0 && filterState === 'Completed' && (
+              <Stack
+                horizontal
+                horizontalAlign="center"
+                verticalAlign="center"
+                styles={taskMessageWrapperStyle}
+              >
+                <Text variant="large">Here is no completed tasks yet.</Text>
+              </Stack>
+            )}
+          </div>
           {/* Footer Bar */}
-          <Stack horizontal horizontalAlign="space-between">
+          <Stack
+            horizontal
+            verticalAlign="center"
+            tokens={{ childrenGap: 5, padding: 10 }}
+            horizontalAlign="space-between"
+            styles={filterWrapperStyle}
+          >
             <Text>{howMuchLeft} items left</Text>
             {/* Filter */}
             <Stack horizontal>
@@ -174,8 +206,8 @@ export const App: React.FunctionComponent<any> = () => {
                 text="All"
                 styles={
                   filterState === 'All'
-                    ? { root: { border: '1px solid red' } }
-                    : {}
+                    ? btnFilterActiveStyle()
+                    : btnFilterDefaultStyle()
                 }
                 onClick={() => filterTasks('All')}
               />
@@ -184,8 +216,8 @@ export const App: React.FunctionComponent<any> = () => {
                 text="Active"
                 styles={
                   filterState === 'Active'
-                    ? { root: { border: '1px solid red' } }
-                    : {}
+                    ? btnFilterActiveStyle()
+                    : btnFilterDefaultStyle()
                 }
                 onClick={() => filterTasks('Active')}
               />
@@ -194,8 +226,8 @@ export const App: React.FunctionComponent<any> = () => {
                 text="Completed"
                 styles={
                   filterState === 'Completed'
-                    ? { root: { border: '1px solid red' } }
-                    : {}
+                    ? btnFilterActiveStyle()
+                    : btnFilterDefaultStyle()
                 }
                 onClick={() => filterTasks('Completed')}
               />
@@ -203,13 +235,14 @@ export const App: React.FunctionComponent<any> = () => {
               <DefaultButton
                 text="Clear completed"
                 onClick={clearCompletedTasks}
+                styles={btnFilterDefaultStyle()}
               />
             </Stack>
           </Stack>
+          <span className="stackedPaperEffect-1"></span>
+          <span className="stackedPaperEffect-2"></span>
         </div>
-      ) : (
-        ''
-      )}
+      </div>
     </Stack>
   );
 };

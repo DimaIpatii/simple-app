@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { Stack, Checkbox, TextField, IconButton } from '@fluentui/react';
 
+/* Styles */
+import {
+  taskItemWrapperStyle,
+  taskCheckmarkStyle,
+  taskFieldStyle,
+  taskFieldCompletedStyle,
+  btnTaskRemove,
+} from '../../styles/components';
+
 const ListItem: React.FunctionComponent<any> = ({
   id,
   task,
@@ -29,32 +38,13 @@ const ListItem: React.FunctionComponent<any> = ({
       id={id}
       horizontal
       verticalAlign="center"
-      styles={{
-        root: {
-          position: 'relative',
-          height: 80,
-          borderBottom: '1px solid grey',
-          ':hover .button': {
-            opacity: 1,
-            zIndex: 1,
-          },
-        },
-      }}
+      tokens={{ padding: 10, childrenGap: 5 }}
+      styles={taskItemWrapperStyle}
     >
       <Checkbox
         checked={completed}
         onChange={() => toggleTask(id)}
-        styles={{
-          root: {},
-          checkbox: {
-            backgroundColor: 'transparent',
-            ':checked': { border: '10px solid red' },
-          },
-          checkmark: {
-            color: 'red',
-            ':hover': { backgroundColor: 'transparent' },
-          },
-        }}
+        styles={taskCheckmarkStyle}
       />
 
       <TextField
@@ -65,33 +55,13 @@ const ListItem: React.FunctionComponent<any> = ({
         onKeyPress={(e: any) => getKey(e.key)}
         borderless
         disabled={completed}
-        styles={
-          completed
-            ? {
-                field: {
-                  textDecoration: 'line-through',
-                  backgroundColor: 'transparent',
-                },
-              }
-            : {}
-        }
+        styles={completed ? taskFieldCompletedStyle : taskFieldStyle}
       />
 
       <IconButton
         className="button"
         iconProps={{ iconName: 'Cancel' }}
-        styles={{
-          root: {
-            color: 'red',
-            position: 'absolute',
-            top: '50%',
-            right: '5%',
-            transform: 'translate(0%, -50%)',
-            opacity: 0,
-            zIndex: -10,
-            transition: 'all .5s',
-          },
-        }}
+        styles={btnTaskRemove()}
         onClick={() => deleteTask(id)}
       />
     </Stack>
