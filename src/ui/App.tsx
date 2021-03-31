@@ -7,28 +7,19 @@ import './App.css';
 
 /* Components */
 import ListItem from './components/ListItem';
-import { stat } from 'node:fs';
+/* Types */
+import { ITaskItem } from '../types';
+
+/* Helpers */
+import { checkState } from '../helpers/checkState';
+
 initializeIcons();
-interface IListItem {
-  id: number;
-  task: string;
-  state: boolean;
-}
 
-class Task {
-  state: boolean;
-  constructor(public id: number, public task: string) {
-    this.id = id;
-    this.task = task;
-    this.state = false;
-  }
-}
-
-export const App: React.FunctionComponent = () => {
-  const [buffer, setBuffer] = useState<IListItem[]>([]);
-  const [tasks, setTasks] = useState<IListItem[]>([]);
-  const [task, setTask] = useState<string>('');
-  const [howMuchLeft, setHowMuchLeft] = useState(0);
+export const App: React.FunctionComponent<any> = () => {
+  const [buffer, setBuffer] = useState<ITaskItem[]>([]);
+  const [tasks, setTasks] = useState<ITaskItem[]>([]);
+  const [taskInput, setTaskInput] = useState<string>('');
+  const [howMuchLeft, setHowMuchLeft] = useState<number>(0);
   const [filterState, setFilterState] = useState<string>('All');
 
   const toggleAllStatus = useRef(true);
@@ -37,28 +28,26 @@ export const App: React.FunctionComponent = () => {
   const addTask = (buttonPressed: string): void => {
     if (buttonPressed === 'Enter') {
       let newId = 1;
-      if (tasks.length > 0) {
-        newId = tasks[tasks.length - 1].id + 1;
+      if (buffer.length > 0) {
+        newId = buffer[buffer.length - 1].id + 1;
       }
-      const newTask = new Task(newId, task);
-      //setTasks([...tasks, { ...newTask }]);
-      setBuffer([...buffer, { ...newTask }]);
-      setTask('');
+      const newTask: ITaskItem = {
+        id: newId,
+        task: taskInput,
+        completed: false,
+      };
+      setBuffer([...buffer, newTask]);
+      setTaskInput('');
     }
   };
 
   const toggleTask = (id: number): void => {
-    /* const selectedTask = tasks.map((el) => {
-      if (el.id === id) el.state = !el.state;
-      return el;
-    }); */
     filterTasks(filterState, id);
     toggleAllStatus.current = true;
-    //setTasks(selectedTask);
   };
   const toggleAll = () => {
     const allTasks = buffer.map((task) => {
-      task.state = toggleAllStatus.current;
+      task.completed = toggleAllStatus.current;
       return task;
     });
 
@@ -71,63 +60,27 @@ export const App: React.FunctionComponent = () => {
     setBuffer(remainedTasks);
   };
 
-  const upadateTask = (id: number, text: string) => {
+  const upadateTask = (id: number, text: string): void => {
     const index = tasks.findIndex((el) => el.id === id);
 
     tasks[index].task = text;
     setTasks([...tasks]);
   };
+  /* *********************** */
 
   /* Bottom Filter Events: */
   const filterTasks = (state: string, id?: number): void => {
     setFilterState(state);
-    let filteredTasks: IListItem[];
 
-    switch (state) {
-      case 'Active':
-        /* filteredTasks = buffer.filter((el) => {
-          if (el.state === false && !id) {
-            return el;
-          } else {
-            el.state = true;
-          }
-        }); */
-        filteredTasks = buffer
-          .map((task) => {
-            if (task.id === id) task.state = true;
-            return task;
-          })
-          .filter((task) => task.state === false);
-
-        break;
-      case 'Completed':
-        /* filteredTasks = buffer.filter((el) => {
-          if (el.state === true && !id) {
-            return el;
-          } else {
-            el.state = false;
-          }
-        }); */
-        filteredTasks = buffer
-          .map((task) => {
-            if (task.id === id) task.state = false;
-            return task;
-          })
-          .filter((task) => task.state === true);
-        break;
-      default:
-        filteredTasks = buffer.map((el) => {
-          if (el.id === id) el.state = !el.state;
-          return el;
-        });
-        break;
-    }
-
+    const filteredTasks = checkState(state, buffer, id);
     setTasks(filteredTasks);
+    itemsLeftCounter();
   };
 
   const clearCompletedTasks = (): void => {
-    const resetCompletedTasks = buffer.filter((task) => task.state !== true);
+    const resetCompletedTasks = buffer.filter(
+      (task) => task.completed !== true
+    );
 
     setBuffer(resetCompletedTasks);
     setFilterState('All');
@@ -135,14 +88,17 @@ export const App: React.FunctionComponent = () => {
 
   /* *********************** */
 
-  useEffect(() => {
-    setTasks(buffer);
-  }, [buffer]);
+  /* Items Left Counter */
+  const itemsLeftCounter = () => {
+    const toComplete = buffer.filter((task) => task.completed === false);
+    setHowMuchLeft(toComplete.length);
+  };
+  /* *********************** */
 
   useEffect(() => {
-    const toComplete = tasks.filter((task) => task.state === false);
-    setHowMuchLeft(toComplete.length);
-  }, [tasks]);
+    filterTasks(filterState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [buffer]);
 
   console.log(tasks);
   return (
@@ -179,8 +135,8 @@ export const App: React.FunctionComponent = () => {
         {/* Input textfiled*/}
         <TextField
           placeholder="What needs to be done?"
-          value={task}
-          onChange={(e: any) => setTask(e.target.value)}
+          value={taskInput}
+          onChange={(e: any) => setTaskInput(e.target.value)}
           onKeyPress={(e: any) => addTask(e.key)}
         />
       </Stack>
@@ -195,7 +151,7 @@ export const App: React.FunctionComponent = () => {
                   key={task.id}
                   id={task.id}
                   task={task.task}
-                  state={task.state}
+                  completed={task.completed}
                   upadateTask={upadateTask}
                   toggleTask={toggleTask}
                   deleteTask={deleteTask}
