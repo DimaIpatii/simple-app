@@ -2,18 +2,24 @@
   @include size(100%, 60px);
 
   &RemoveButton {
-    opacity: 1;
+    opacity: 0;
+    z-index: -10;
+    transition: 'all .5s';
   }
 
-  @include viewport('tablet-land') {
-    &RemoveButton {
-      opacity: 0;
-      z-index: -10;
-      transition: 'all .5s';
-    }
-    &:hover .taskItemRemoveButton {
-      opacity: 1;
-      z-index: 1;
+  &:hover .taskItemRemoveButton {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  /* Text Fields */
+  .field-85, // Default,
+  .field-93 // Disabled
+  {
+    font-size: 16px;
+
+    @include viewport('tablet-land') {
+      font-size: 20px;
     }
   }
 }

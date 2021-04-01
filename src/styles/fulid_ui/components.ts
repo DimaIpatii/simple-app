@@ -135,14 +135,14 @@ export const taskFieldStyle = (
   return {
     root: { width: '100%' },
     fieldGroup: [{ height: 'max-content' }],
-    field: { fontSize: '20px' },
+    /* field: { fontSize: '20px' }, */
   };
 };
 
 export const taskFieldCompletedStyle = () => {
   return {
     field: {
-      fontSize: '20px',
+      /* fontSize: '16px', */
       textDecoration: 'line-through',
       backgroundColor: 'transparent',
     },
@@ -154,8 +154,6 @@ export const taskCheckmarkStyle = (
   props: ICheckboxStyleProps
 ): Partial<ICheckboxStyles> => {
   const { checked } = props;
-
-  console.log('checkbox', props);
   return {
     checkbox: {
       width: '30px',
