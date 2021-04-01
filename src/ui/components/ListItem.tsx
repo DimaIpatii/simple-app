@@ -10,7 +10,10 @@ import {
   btnTaskRemove,
 } from '../../styles/fulid_ui/components';
 
-const ListItem: React.FunctionComponent<any> = ({
+/* Types */
+import { IlistProps } from '../../types';
+
+const ListItem: React.FunctionComponent<IlistProps> = ({
   id,
   task,
   completed,
@@ -36,7 +39,7 @@ const ListItem: React.FunctionComponent<any> = ({
   return (
     <div className="taskItem">
       <Stack
-        id={id}
+        id={String(id)}
         horizontal
         verticalAlign="center"
         tokens={{ padding: 10, childrenGap: 5 }}

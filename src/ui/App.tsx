@@ -1,22 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Stack, Text, TextField } from '@fluentui/react';
 import { initializeIcons } from '@uifabric/icons';
-import { IconButton, DefaultButton } from '@fluentui/react/lib/Button';
+import { IconButton } from '@fluentui/react/lib/Button';
 
 /* Styles */
 import {
   mainCaptionStyle,
   addTaskWrapperStyle,
   btnSelectAllStyle,
-  btnFilterActiveStyle,
-  btnFilterDefaultStyle,
   textFieldAddStyle,
-  filterWrapperStyle,
   taskMessageWrapperStyle,
 } from '../styles/fulid_ui/components';
 
 /* Components */
 import ListItem from './components/ListItem';
+import BottomFilter from './components/BottomFilter';
 /* Types */
 import { ITaskItem } from '../types';
 
@@ -120,7 +118,6 @@ export const App: React.FunctionComponent<any> = () => {
           todos
         </Text>
       </Stack>
-      {/* <div className="appMainContentWrapper"> */}
       {/* Header */}
       <div className="appWrapperAddTask">
         <Stack
@@ -200,60 +197,16 @@ export const App: React.FunctionComponent<any> = () => {
             </Stack>
           )}
         </div>
+
         {/* Footer Bar */}
-        <Stack
-          wrap
-          horizontal
-          verticalAlign="center"
-          tokens={{ childrenGap: 5, padding: 10 }}
-          horizontalAlign="space-between"
-          styles={filterWrapperStyle}
-        >
-          <Text>{howMuchLeft} items left</Text>
-          {/* Filter */}
-          <Stack horizontal wrap>
-            <div className="appWrapperButtonsWrapper">
-              <DefaultButton
-                text="All"
-                styles={
-                  filterState === 'All'
-                    ? btnFilterActiveStyle()
-                    : btnFilterDefaultStyle()
-                }
-                onClick={() => filterTasks('All')}
-              />
 
-              <DefaultButton
-                text="Active"
-                styles={
-                  filterState === 'Active'
-                    ? btnFilterActiveStyle()
-                    : btnFilterDefaultStyle()
-                }
-                onClick={() => filterTasks('Active')}
-              />
-
-              <DefaultButton
-                text="Completed"
-                styles={
-                  filterState === 'Completed'
-                    ? btnFilterActiveStyle()
-                    : btnFilterDefaultStyle()
-                }
-                onClick={() => filterTasks('Completed')}
-              />
-
-              <DefaultButton
-                className="buttonsWrapperButton"
-                text="Clear completed"
-                onClick={clearCompletedTasks}
-                styles={btnFilterDefaultStyle()}
-              />
-            </div>
-          </Stack>
-        </Stack>
+        <BottomFilter
+          howMuchLeft={howMuchLeft}
+          filterState={filterState}
+          filterTasks={filterTasks}
+          clearCompletedTasks={clearCompletedTasks}
+        />
       </div>
-      {/* </div> */}
     </div>
   );
 };
