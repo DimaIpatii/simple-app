@@ -9,16 +9,9 @@ import {
 } from '@fluentui/react';
 
 /* Wrappers */
-export const toDoWrapperStyle = () => {
-  return {
-    root: {
-      width: 520,
-    },
-  };
-};
 export const addTaskWrapperStyle = () => {
   return {
-    root: { borderBottom: '1px solid #e4e4e4', width: '100%', height: 80 },
+    root: { borderBottom: '1px solid #e4e4e4', width: '100%', height: '100%' },
   };
 };
 
@@ -28,13 +21,9 @@ export const taskItemWrapperStyle = (
   return {
     root: {
       position: 'relative',
-      height: 70,
+      height: '100%',
       backgroundColor: 'white',
       borderBottom: '1px solid grey',
-      ':hover .button': {
-        opacity: 1,
-        zIndex: 1,
-      },
     },
   };
 };
@@ -57,17 +46,26 @@ export const taskMessageWrapperStyle = () => {
     },
   };
 };
+
 /* Buttons */
 export const btnSelectAllStyle = () => {
   return {
-    root: { color: 'grey', backgroundColor: 'transparent' },
+    root: { color: 'grey', backgroundColor: 'transparent', opacity: 1 },
+    rootHovered: {
+      color: '#444444',
+      backgroundColor: 'transparent',
+    },
     rootDisabled: { backgroundColor: 'transparent' },
   };
 };
 
 export const btnFilterDefaultStyle = () => {
   return {
-    root: { color: 'grey', border: '1px solid transparent' },
+    root: {
+      color: 'grey',
+      fontWeight: '100',
+      border: '1px solid transparent',
+    },
     rootHovered: { backgroundColor: 'trasparent' },
   };
 };
@@ -76,9 +74,8 @@ export const btnFilterActiveStyle = () => {
     root: {
       color: 'grey',
       border: '1px solid #ec9595',
-      fontSizes: '10px',
+      fontWeight: '100',
       backgroundColor: 'white',
-      minWidth: 'max-content',
       padding: '0px 10px',
     },
     rootHovered: {
@@ -90,16 +87,22 @@ export const btnFilterActiveStyle = () => {
 export const btnTaskRemove = (): IButtonStyles => {
   return {
     root: {
-      color: 'red',
+      color: '#fd5f5f',
       position: 'absolute',
       top: '50%',
       right: '5%',
       transform: 'translate(0%, -50%)',
-      opacity: 0,
-      zIndex: -10,
-      transition: 'all .5s',
+    },
+    rootHovered: {
+      backgroundColor: 'transparent',
+      color: 'red',
     },
   };
+};
+
+/* Text */
+export const mainCaptionStyle = () => {
+  return { root: { color: 'red', textAlign: 'center' } };
 };
 
 /* Text Fields */
@@ -117,11 +120,9 @@ export const textFieldAddStyle = (
       },
     ],
     field: {
-      fontSize: '30px',
       lineHeight: 1,
       color: 'grey',
       '::placeholder': {
-        fontSize: '30px',
         color: 'grey',
       },
     },
@@ -137,6 +138,7 @@ export const taskFieldStyle = (
     field: { fontSize: '20px' },
   };
 };
+
 export const taskFieldCompletedStyle = () => {
   return {
     field: {
@@ -153,9 +155,8 @@ export const taskCheckmarkStyle = (
 ): Partial<ICheckboxStyles> => {
   const { checked } = props;
 
-  console.log(props);
+  console.log('checkbox', props);
   return {
-    root: {},
     checkbox: {
       width: '30px',
       height: '30px',
@@ -168,16 +169,12 @@ export const taskCheckmarkStyle = (
         width: '30px',
         height: '30px',
         borderRadius: '100px',
-        backgroundColor: 'transparent',
-      },
-      onHover: {
-        backgroundColor: 'red',
+        backgroundColor: 'transparent!important',
       },
     }),
     checkmark: {
       color: 'green',
       fontSize: '20px',
-      ':hover': { backgroundColor: 'transparent' },
     },
   };
 };

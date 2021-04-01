@@ -1,0 +1,19 @@
+.taskItem {
+  @include size(100%, 60px);
+
+  &RemoveButton {
+    opacity: 1;
+  }
+
+  @include viewport('tablet-land') {
+    &RemoveButton {
+      opacity: 0;
+      z-index: -10;
+      transition: 'all .5s';
+    }
+    &:hover .taskItemRemoveButton {
+      opacity: 1;
+      z-index: 1;
+    }
+  }
+}

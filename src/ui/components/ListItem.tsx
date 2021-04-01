@@ -8,7 +8,7 @@ import {
   taskFieldStyle,
   taskFieldCompletedStyle,
   btnTaskRemove,
-} from '../../styles/components';
+} from '../../styles/fulid_ui/components';
 
 const ListItem: React.FunctionComponent<any> = ({
   id,
@@ -34,37 +34,39 @@ const ListItem: React.FunctionComponent<any> = ({
 
   /* ***************************************** */
   return (
-    <Stack
-      id={id}
-      horizontal
-      verticalAlign="center"
-      tokens={{ padding: 10, childrenGap: 5 }}
-      styles={taskItemWrapperStyle}
-    >
-      <Checkbox
-        checked={completed}
-        onChange={() => toggleTask(id)}
-        styles={taskCheckmarkStyle}
-      />
+    <div className="taskItem">
+      <Stack
+        id={id}
+        horizontal
+        verticalAlign="center"
+        tokens={{ padding: 10, childrenGap: 5 }}
+        styles={taskItemWrapperStyle}
+      >
+        <Checkbox
+          checked={completed}
+          onChange={() => toggleTask(id)}
+          styles={taskCheckmarkStyle}
+        />
 
-      <TextField
-        value={inputVal}
-        onChange={updateText}
-        readOnly={modify ? false : true}
-        onDoubleClick={() => setModify(!modify)}
-        onKeyPress={(e: any) => getKey(e.key)}
-        borderless
-        disabled={completed}
-        styles={completed ? taskFieldCompletedStyle : taskFieldStyle}
-      />
+        <TextField
+          value={inputVal}
+          onChange={updateText}
+          readOnly={modify ? false : true}
+          onDoubleClick={() => setModify(!modify)}
+          onKeyPress={(e: any) => getKey(e.key)}
+          borderless
+          disabled={completed}
+          styles={completed ? taskFieldCompletedStyle : taskFieldStyle}
+        />
 
-      <IconButton
-        className="button"
-        iconProps={{ iconName: 'Cancel' }}
-        styles={btnTaskRemove()}
-        onClick={() => deleteTask(id)}
-      />
-    </Stack>
+        <IconButton
+          className="taskItemRemoveButton"
+          iconProps={{ iconName: 'Cancel' }}
+          styles={btnTaskRemove()}
+          onClick={() => deleteTask(id)}
+        />
+      </Stack>
+    </div>
   );
 };
 

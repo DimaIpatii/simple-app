@@ -1,0 +1,36 @@
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+/* ******************************* */
+// Media Query manager:
+/* ******************************* */
+$phone: 320px;
+$phone-land: 500px;
+$tab-port: 768px;
+$tab-land: 1024px;
+
+@mixin viewport($device) {
+  @if $device == 'phone' {
+    @media only screen and(min-width:$phone) {
+      @content;
+    }
+  }
+  @if $device == 'phone-land' {
+    @media only screen and(min-width:$phone-land) {
+      @content;
+    }
+  }
+  @if $device == 'tablet-port' {
+    @media only screen and(min-width:$tab-port) {
+      @content;
+    }
+  }
+
+  @if $device == 'tablet-land' {
+    @media only screen and(min-width:$tab-land) {
+      @content;
+    }
+  }
+}

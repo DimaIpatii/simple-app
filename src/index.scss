@@ -1,0 +1,9 @@
+@import './styles/sass/variables';
+@import './styles/sass/mixins';
+
+@import './styles/sass/reset';
+
+/* Components */
+@import './styles/sass/root';
+@import './styles/sass/appWrapper';
+@import './styles/sass/taskItem';

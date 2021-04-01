@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './ui/App';
-import { mergeStyles } from '@fluentui/react';
+import './index.scss';
+//import { mergeStyles } from '@fluentui/react';
 
 import reportWebVitals from './reportWebVitals';
-mergeStyles({
+/* mergeStyles({
   ':global(body,html,#root)': {
     margin: 0,
     padding: 0,
@@ -22,7 +23,7 @@ mergeStyles({
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
+}); */
 ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function

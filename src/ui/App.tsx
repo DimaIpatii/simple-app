@@ -2,11 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Stack, Text, TextField } from '@fluentui/react';
 import { initializeIcons } from '@uifabric/icons';
 import { IconButton, DefaultButton } from '@fluentui/react/lib/Button';
+
 /* Styles */
-import './App.css';
-import { mainCaptionStyle } from '../styles/typography';
 import {
-  toDoWrapperStyle,
+  mainCaptionStyle,
   addTaskWrapperStyle,
   btnSelectAllStyle,
   btnFilterActiveStyle,
@@ -14,7 +13,7 @@ import {
   textFieldAddStyle,
   filterWrapperStyle,
   taskMessageWrapperStyle,
-} from '../styles/components';
+} from '../styles/fulid_ui/components';
 
 /* Components */
 import ListItem from './components/ListItem';
@@ -56,6 +55,7 @@ export const App: React.FunctionComponent<any> = () => {
     filterTasks(filterState, id);
     toggleAllStatus.current = true;
   };
+
   const toggleAll = () => {
     const allTasks = buffer.map((task) => {
       task.completed = toggleAllStatus.current;
@@ -114,12 +114,15 @@ export const App: React.FunctionComponent<any> = () => {
   /* ************************************* */
   return (
     /* Wrapper */
-    <Stack styles={toDoWrapperStyle()} tokens={{ childrenGap: 10 }}>
-      <Text variant="mega" styles={mainCaptionStyle()}>
-        todos
-      </Text>
-      <div className="wrapper">
-        {/* Header */}
+    <div className="appWrapper">
+      <Stack>
+        <Text variant="mega" styles={mainCaptionStyle()}>
+          todos
+        </Text>
+      </Stack>
+      {/* <div className="appMainContentWrapper"> */}
+      {/* Header */}
+      <div className="appWrapperAddTask">
         <Stack
           horizontal
           verticalAlign="center"
@@ -127,81 +130,89 @@ export const App: React.FunctionComponent<any> = () => {
           styles={addTaskWrapperStyle()}
         >
           {/* Button Check All */}
+
           <IconButton
             iconProps={{ iconName: 'ChevronDownSmall' }}
             title="ChevronDownSmall"
             ariaLabel="ChevronDownSmall"
-            styles={btnSelectAllStyle()}
+            styles={
+              buffer.length > 0 ? btnSelectAllStyle() : { root: { opacity: 0 } }
+            }
             onClick={toggleAll}
-            disabled={buffer.length > 0 ? false : true}
           />
 
           {/* Input textfiled*/}
-          <TextField
-            placeholder="What needs to be done?"
-            value={taskInput}
-            onChange={(e: any) => setTaskInput(e.target.value)}
-            onKeyPress={(e: any) => addTask(e.key)}
-            borderless
-            styles={textFieldAddStyle}
-          />
+          <Stack.Item align="center" styles={{ root: { width: '100%' } }}>
+            <TextField
+              placeholder="What needs to be done?"
+              value={taskInput}
+              onChange={(e: any) => setTaskInput(e.target.value)}
+              onKeyPress={(e: any) => addTask(e.key)}
+              borderless
+              autoComplete="off"
+              styles={textFieldAddStyle}
+            />
+          </Stack.Item>
         </Stack>
+      </div>
 
-        {/* To-do items wrapper*/}
+      {/* To-do items wrapper*/}
+      <div
+        className={`appWrapperTasksContainer ${
+          buffer.length > 0 ? 'appWrapperTasksContainerShow' : ''
+        }`}
+      >
+        {/* Content */}
+        <div className="appWrapperTasksWrapper">
+          {tasks &&
+            tasks.map((task) => {
+              return (
+                <ListItem
+                  key={task.id}
+                  id={task.id}
+                  task={task.task}
+                  completed={task.completed}
+                  upadateTask={upadateTask}
+                  toggleTask={toggleTask}
+                  deleteTask={deleteTask}
+                />
+              );
+            })}
 
-        <div
-          className={`tasksContainer ${
-            buffer.length > 0 ? 'tasksContainerShow' : ''
-          }`}
+          {tasks.length === 0 && filterState === 'Active' && (
+            <Stack
+              horizontal
+              horizontalAlign="center"
+              verticalAlign="center"
+              styles={taskMessageWrapperStyle}
+            >
+              <Text variant="large">Here is no active tasks to do.</Text>
+            </Stack>
+          )}
+          {tasks.length === 0 && filterState === 'Completed' && (
+            <Stack
+              horizontal
+              horizontalAlign="center"
+              verticalAlign="center"
+              styles={taskMessageWrapperStyle}
+            >
+              <Text variant="large">Here is no completed tasks yet.</Text>
+            </Stack>
+          )}
+        </div>
+        {/* Footer Bar */}
+        <Stack
+          wrap
+          horizontal
+          verticalAlign="center"
+          tokens={{ childrenGap: 5, padding: 10 }}
+          horizontalAlign="space-between"
+          styles={filterWrapperStyle}
         >
-          {/* Content */}
-          <div className="tasksWrapper">
-            {tasks &&
-              tasks.map((task) => {
-                return (
-                  <ListItem
-                    key={task.id}
-                    id={task.id}
-                    task={task.task}
-                    completed={task.completed}
-                    upadateTask={upadateTask}
-                    toggleTask={toggleTask}
-                    deleteTask={deleteTask}
-                  />
-                );
-              })}
-            {tasks.length === 0 && filterState === 'Active' && (
-              <Stack
-                horizontal
-                horizontalAlign="center"
-                verticalAlign="center"
-                styles={taskMessageWrapperStyle}
-              >
-                <Text variant="large">Here is no active tasks to do.</Text>
-              </Stack>
-            )}
-            {tasks.length === 0 && filterState === 'Completed' && (
-              <Stack
-                horizontal
-                horizontalAlign="center"
-                verticalAlign="center"
-                styles={taskMessageWrapperStyle}
-              >
-                <Text variant="large">Here is no completed tasks yet.</Text>
-              </Stack>
-            )}
-          </div>
-          {/* Footer Bar */}
-          <Stack
-            horizontal
-            verticalAlign="center"
-            tokens={{ childrenGap: 5, padding: 10 }}
-            horizontalAlign="space-between"
-            styles={filterWrapperStyle}
-          >
-            <Text>{howMuchLeft} items left</Text>
-            {/* Filter */}
-            <Stack horizontal>
+          <Text>{howMuchLeft} items left</Text>
+          {/* Filter */}
+          <Stack horizontal wrap>
+            <div className="appWrapperButtonsWrapper">
               <DefaultButton
                 text="All"
                 styles={
@@ -233,16 +244,16 @@ export const App: React.FunctionComponent<any> = () => {
               />
 
               <DefaultButton
+                className="buttonsWrapperButton"
                 text="Clear completed"
                 onClick={clearCompletedTasks}
                 styles={btnFilterDefaultStyle()}
               />
-            </Stack>
+            </div>
           </Stack>
-          <span className="stackedPaperEffect-1"></span>
-          <span className="stackedPaperEffect-2"></span>
-        </div>
+        </Stack>
       </div>
-    </Stack>
+      {/* </div> */}
+    </div>
   );
 };
